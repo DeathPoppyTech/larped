@@ -2,9 +2,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/", "destination": "/api/index.js" },
-    { "source": "/login", "destination": "/api/login.js" },
-    { "source": "/invite/:code", "destination": "/api/invite.js" },
+    { "source": "/login", "destination": "/login.html" },
     { "source": "/dashboard", "destination": "/api/dashboard.js" },
     { "source": "/admin", "destination": "/api/admin.js" }
   ]
