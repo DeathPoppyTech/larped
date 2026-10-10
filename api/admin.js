@@ -1,6 +1,5 @@
 import { prisma } from '../lib/prisma.js';
 import { getUserFromReq } from '../lib/auth.js';
-import { renderTemplate } from '../lib/render.js';
 
 export default async function handler(req, res) {
   const user = await getUserFromReq(req);
@@ -75,12 +74,62 @@ export default async function handler(req, res) {
     </section>
   ` : '';
 
-  const page = await renderTemplate('admin', 'Larpmail - Admin Console', {
-    INVITES_LIST: invitesList,
-    USERS_ROWS: usersRows,
-    DEV_MENU_SECTION: devMenuSection
-  });
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Larpmail - Admin Console</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen flex flex-col justify-between">
+  <div class="flex-1 flex">
+    <aside class="w-64 border-r border-zinc-800 p-4 flex flex-col justify-between">
+      <div class="space-y-4">
+        <div class="text-xl font-bold tracking-tight px-2">larpmail admin</div>
+        <nav class="space-y-1 text-sm">
+          <a href="/dashboard" class="block text-zinc-400 hover:bg-zinc-800 px-3 py-2 rounded">back to inbox</a>
+          <a href="/admin" class="block bg-zinc-800 text-white px-3 py-2 rounded">admin console</a>
+        </nav>
+      </div>
+    </aside>
 
-  res.setHeader('Content-Type', 'text/html');
-  res.status(200).send(page);
+    <main class="flex-1 p-8 space-y-8 overflow-y-auto">
+      <section class="bg-zinc-900 border border-zinc-800 p-6 rounded-xl space-y-4">
+        <h2 class="text-lg font-bold">invite provisioning</h2>
+        <form action="/api/admin" method="POST">
+          <input type="hidden" name="action" value="create_invite">
+          <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded text-sm font-semibold">generate single-use invite link</button>
+        </form>
+        <div class="space-y-2">
+          ${invitesList}
+        </div>
+      </section>
+
+      <section class="bg-zinc-900 border border-zinc-800 p-6 rounded-xl space-y-4">
+        <h2 class="text-lg font-bold">user management</h2>
+        <table class="w-full text-left text-sm text-zinc-300">
+          <thead class="bg-zinc-950 text-zinc-500 border-b border-zinc-800">
+            <tr>
+              <th class="p-3">handle</th>
+              <th class="p-3">role</th>
+              <th class="p-3">actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${usersRows}
+          </tbody>
+        </table>
+      </section>
+
+      ${devMenuSection}
+    </main>
+  </div>
+</body>
+</html>
+  `;
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.status(200).send(html);
 }
