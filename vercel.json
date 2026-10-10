@@ -2,8 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/dashboard", "destination": "/api/dashboard.js" },
-    { "source": "/admin", "destination": "/api/admin.js" }
+    { "source": "/api/auth/login", "destination": "/api/auth/login.js" },
+    { "source": "/api/auth/me", "destination": "/api/auth/me.js" },
+    { "source": "/api/dashboard/messages", "destination": "/api/dashboard/messages.js" },
+    { "source": "/api/admin/manage", "destination": "/api/admin/manage.js" }
   ]
 }
