@@ -1,8 +1,6 @@
-// prisma/schema.prisma
-
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_URL")
 }
 
 generator client {
@@ -42,14 +40,14 @@ model Message {
   recipient String
   subject   String
   body      String
-  status    String   // DELIVERED, FAILED, QUEUED
+  status    String
   createdAt DateTime @default(now())
 }
 
 model DevLog {
   id        String   @id @default(uuid())
-  type      String   // INFO, WARN, ERROR
+  type      String
   action    String
-  details   String   // Operational metadata ONLY
+  details   String
   timestamp DateTime @default(now())
 }
