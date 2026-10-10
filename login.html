@@ -1,8 +1,15 @@
-<div class="flex-1 flex items-center justify-center p-4">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Larpmail - Sign In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen flex items-center justify-center p-4">
   <div class="bg-zinc-900 border border-zinc-800 p-8 rounded-xl max-w-md w-full shadow-2xl">
     <h2 class="text-2xl font-bold mb-1 text-center">welcome back to larpmail</h2>
-    <p class="text-zinc-400 text-xs text-center mb-6">enter your credentials below</p>
-    <form action="/api/login" method="POST" class="space-y-4">
+    <form action="/api/login" method="POST" class="space-y-4 mt-6">
       <div>
         <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">username:</label>
         <input type="text" name="username" required class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
@@ -13,10 +20,6 @@
       </div>
       <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded text-sm font-semibold transition">[log in]</button>
     </form>
-    <div class="flex justify-between items-center text-xs text-zinc-400 mt-6 pt-4 border-t border-zinc-800">
-      <a href="#" class="hover:underline">forgot password?</a>
-      <span class="text-zinc-600">|</span>
-      <a href="/" class="hover:underline">get access</a>
-    </div>
   </div>
-</div>
+</body>
+</html>
