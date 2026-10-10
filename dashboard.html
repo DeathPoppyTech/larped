@@ -1,20 +1,84 @@
-<div class="flex-1 flex">
-  <aside class="w-64 border-r border-zinc-800 p-4 flex flex-col justify-between">
-    <div class="space-y-4">
-      <div class="text-xl font-bold tracking-tight px-2">Larpmail</div>
-      <nav class="space-y-1 text-sm">
-        <a href="/dashboard" class="block bg-zinc-800 text-white px-3 py-2 rounded">inbox</a>
-        {{ADMIN_LINK}}
-      </nav>
-    </div>
-    <div class="border-t border-zinc-800 pt-3 text-xs text-zinc-400">
-      logged in as <span class="font-bold text-zinc-200">{{USER_HANDLE}}</span> ({{USER_ROLE}})
-    </div>
-  </aside>
-  <main class="flex-1 p-8">
-    <h1 class="text-2xl font-bold mb-4">inbox</h1>
-    <div class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-      {{MESSAGES_TABLE}}
-    </div>
-  </main>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Larpmail - Inbox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen flex flex-col justify-between">
+  <div class="flex-1 flex">
+    <aside class="w-64 border-r border-zinc-800 p-4 flex flex-col justify-between">
+      <div class="space-y-4">
+        <div class="text-xl font-bold tracking-tight px-2">Larpmail</div>
+        <nav class="space-y-1 text-sm">
+          <a href="/dashboard.html" class="block bg-zinc-800 text-white px-3 py-2 rounded">inbox</a>
+          <div id="admin-link-container"></div>
+        </nav>
+      </div>
+      <div id="user-info" class="border-t border-zinc-800 pt-3 text-xs text-zinc-400">
+        loading session...
+      </div>
+    </aside>
+    <main class="flex-1 p-8">
+      <h1 class="text-2xl font-bold mb-4">inbox</h1>
+      <div id="messages-container" class="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden p-6 text-zinc-500 text-sm">
+        loading messages...
+      </div>
+    </main>
+  </div>
+
+  <script>
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/dashboard/messages');
+        if (!res.ok) {
+          window.location.href = '/login.html';
+          return;
+        }
+        const data = await res.json();
+
+        // Render user info
+        document.getElementById('user-info').innerHTML = `logged in as <span class="font-bold text-zinc-200">${data.user.username}@vmlinuz.co.ke</span> (${data.user.role})`;
+
+        // Render admin link if authorized
+        if (['ADMIN', 'SUPERUSER'].includes(data.user.role)) {
+          document.getElementById('admin-link-container').innerHTML = `<a href="/admin.html" class="block text-zinc-400 hover:bg-zinc-800 px-3 py-2 rounded">admin console</a>`;
+        }
+
+        // Render messages table
+        const container = document.getElementById('messages-container');
+        if (data.messages.length === 0) {
+          container.innerHTML = 'no messages found in your inbox.';
+          return;
+        }
+
+        container.className = "bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden";
+        container.innerHTML = `
+          <table class="w-full text-left text-sm text-zinc-300">
+            <thead class="bg-zinc-950 text-zinc-500 border-b border-zinc-800">
+              <tr>
+                <th class="p-3">from</th>
+                <th class="p-3">subject</th>
+                <th class="p-3">date</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.messages.map(m => `
+                <tr class="border-b border-zinc-800 hover:bg-zinc-800/50">
+                  <td class="p-3 font-mono text-xs">${m.sender}</td>
+                  <td class="p-3 font-medium text-white">${m.subject}</td>
+                  <td class="p-3 text-xs text-zinc-500">${new Date(m.createdAt).toLocaleDateString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        window.location.href = '/login.html';
+      }
+    }
+    loadDashboard();
+  </script>
+</body>
+</html>
