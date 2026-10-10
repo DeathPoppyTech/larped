@@ -4,13 +4,13 @@
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
-    "build": "prisma generate && prisma db push"
+    "build": "POSTGRES_URL=\"postgresql://placeholder:placeholder@localhost:5432/db\" prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
-    "@prisma/client": "^5.10.0",
+    "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^5.10.0"
+    "prisma": "^5.22.0"
   }
 }
